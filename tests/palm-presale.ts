@@ -10,7 +10,7 @@ import {
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
 } from "@solana/web3.js";
-// import { ASSOCIATED_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
+
 import { BN } from "bn.js";
 import {
   TOKEN_PROGRAM_ID,
@@ -111,32 +111,6 @@ describe("palm-presale", () => {
     );
   };
 
-  // it("Airdrop to user wallet", async () => {
-  //   console.log("Created admin, address is ", admin.publicKey.toBase58());
-  //   console.log(
-  //     `Requesting airdrop for admin ${admin.publicKey.toBase58()}`
-  //   );
-  //   // 1 - Request Airdrop
-  //   const signature = await connection.requestAirdrop(admin.publicKey, 10 ** 9);
-  //   // 2 - Fetch the latest blockhash
-  //   const { blockhash, lastValidBlockHeight } =
-  //     await connection.getLatestBlockhash();
-  //   // 3 - Confirm transaction success
-  //   await connection.confirmTransaction(
-  //     {
-  //       blockhash,
-  //       lastValidBlockHeight,
-  //       signature,
-  //     },
-  //     "finalized"
-  //   );
-  //   console.log(
-  //     "user balance : ",
-  //     (await connection.getBalance(admin.publicKey)) / 10 ** 9,
-  //     "SOL"
-  //   );
-  // });
-
   it("Mint token to admin wallet", async () => {
     console.log("Trying to create and mint token to admin's wallet.");
     console.log("Here, contract uses this token as LP token");
@@ -184,92 +158,6 @@ describe("palm-presale", () => {
       console.log("-----Token creation error----- \n", error);
     }
   });
-
-  // it("Presale account is initialized!", async () => {
-
-  //   // fetching accounts for transaction
-  //   const [presalePDA] = await getPresalePDA();
-  //   console.log(`Presale address: ${presalePDA} is created.`);
-  //   console.log("Balance of admin wallet: ", await connection.getBalance(adminPubkey));
-
-  //   console.log(`--------${program.programId}-------`);
-
-
-  //   // preparing transaction
-  //   const tx = await program.methods
-  //     .createPresale(
-  //       mint,
-  //       softCapAmount,
-  //       hardCapAmount,
-  //       maxTokenAmountPerAddress,
-  //       pricePerToken,
-  //       startTime,
-  //       endTime
-  //     )
-  //     .accounts({
-  //       presaleInfo: presalePDA,
-  //       authority: adminPubkey,
-  //       systemProgram: web3.SystemProgram.programId,
-  //     })
-  //     .signers([admin])
-  //     .transaction();
-
-  //   tx.feePayer = admin.publicKey;
-  //   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-
-  //   console.log("transaction", tx);
-
-  //   // transcation confirmation stage
-  //   console.log(await connection.simulateTransaction(tx))
-  //   const signature = await sendAndConfirmTransaction(connection, tx, [admin]);
-  //   console.log(
-  //     `Transaction succcess: \n https://solscan.io/tx/${signature}?cluster=devnet`
-  //   );
-
-  //   // test result check
-  //   const presaleState = await program.account.presaleInfo.fetch(presalePDA);
-  //   console.log("presale state: ", presaleState);
-  //   // console.log("presale hard cap: ", presaleState.hardcapAmount.toString());
-  // });
-
-  // it("Presale is updated!", async () => {
-
-  //   // fetching accounts for transaction
-  //   const [presalePDA] = await getPresalePDA();
-
-  //   // preparing transaction
-  //   const tx = await program.methods
-  //     .updatePresale(
-  //       maxTokenAmountPerAddress,
-  //       pricePerToken,
-  //       softCapAmount,
-  //       hardCapAmount,
-  //       startTime,
-  //       endTime
-  //     )
-  //     .accounts({
-  //       presaleInfo: presalePDA,
-  //       authority: adminPubkey,
-  //       systemProgram: web3.SystemProgram.programId,
-  //     })
-  //     .signers([admin])
-  //     .transaction();
-
-  //   tx.feePayer = admin.publicKey;
-  //   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-
-  //   console.log(await connection.simulateTransaction(tx))
-
-  //   const signature = await sendAndConfirmTransaction(connection, tx, [admin]);
-  //   console.log(
-  //     `Transaction succcess: \n https://solscan.io/tx/${signature}?cluster=devnet`
-  //   );
-
-  //   // test result check
-  //   const presaleState = await program.account.presaleInfo.fetch(presalePDA);
-  //   console.log("presale state: ", presaleState);
-  //   console.log("presale soft cap: ", presaleState.softcapAmount.toString());
-  // });
 
   it("Token is deposited!", async () => {
 
@@ -352,52 +240,6 @@ describe("palm-presale", () => {
     console.log("End time: ", new Date(parseInt(endTime.toString())), "----", endTime.toNumber());
   });
 
-  // it("Buy token!", async () => {
-
-  //   await sleep(1000);
-
-  //   const [presalePDA] = await getPresalePDA();
-  //   const [presaleVault] = await getVaultPDA();
-  //   const tokenAmount = quoteSolAmount.div(pricePerToken);
-
-  //   // get userInfo Address
-  //   const userInfo = await getUserInfoPDA();
-
-  //   // preparing transaction
-  //   const tx = await program.methods
-  //     .buyToken(quoteSolAmount, tokenAmount)
-  //     .accounts({
-  //       presaleInfo: presalePDA,
-  //       presaleAuthority: adminPubkey,
-  //       userInfo: userInfo,
-  //       presaleVault: presaleVault,
-  //       buyer: buyerPubkey,
-  //       rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-  //       systemProgram: SystemProgram.programId,
-  //       tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
-  //       associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
-  //     })
-  //     .signers([buyer.payer])
-  //     .transaction();
-
-  //   tx.feePayer = buyerPubkey;
-  //   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-
-  //   console.log(await connection.simulateTransaction(tx))
-
-  //   const signature = await sendAndConfirmTransaction(connection, tx, [
-  //     buyer.payer,
-  //   ]);
-
-  //   const userState = await program.account.userInfo.fetch(userInfo);
-  //   const vaultBalance = await connection.getBalance(presaleVault);
-
-  //   console.log(
-  //     `Transaction success: \n https://solscan.io/tx/${signature}?cluster=devnet`
-  //   );
-  //   console.log("Presale Vault balance: ", vaultBalance, " address : ", presaleVault);
-  //   console.log("User state: ", userState);
-  // });
 
   it("Claim token!", async () => {
     console.log("waiting for some seconds for presale to end")
